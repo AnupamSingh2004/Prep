@@ -3,29 +3,52 @@ import '../services/api_service.dart';
 import '../services/google_auth_service.dart';
 import '../models/user_model.dart';
 import 'home_page.dart';
-import 'register_page.dart';
+import 'login_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  final FocusNode _firstNameFocusNode = FocusNode();
+  final FocusNode _lastNameFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
 
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
+  bool _firstNameFocused = false;
+  bool _lastNameFocused = false;
   bool _emailFocused = false;
   bool _passwordFocused = false;
+  bool _confirmPasswordFocused = false;
 
   @override
   void initState() {
     super.initState();
+
+    _firstNameFocusNode.addListener(() {
+      setState(() {
+        _firstNameFocused = _firstNameFocusNode.hasFocus;
+      });
+    });
+
+    _lastNameFocusNode.addListener(() {
+      setState(() {
+        _lastNameFocused = _lastNameFocusNode.hasFocus;
+      });
+    });
 
     _emailFocusNode.addListener(() {
       setState(() {
@@ -36,6 +59,12 @@ class _LoginPageState extends State<LoginPage> {
     _passwordFocusNode.addListener(() {
       setState(() {
         _passwordFocused = _passwordFocusNode.hasFocus;
+      });
+    });
+
+    _confirmPasswordFocusNode.addListener(() {
+      setState(() {
+        _confirmPasswordFocused = _confirmPasswordFocusNode.hasFocus;
       });
     });
   }
@@ -81,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       // Top spacing
-                      SizedBox(height: screenHeight * 0.08),
+                      SizedBox(height: screenHeight * 0.06),
 
                       // Logo and Title
                       _buildHeader(),
@@ -91,19 +120,19 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(height: 40),
+                            const SizedBox(height: 32),
 
-                            // Login Form
-                            _buildLoginForm(),
+                            // Register Form
+                            _buildRegisterForm(),
 
                             const SizedBox(height: 24),
 
-                            // Login Button
-                            _buildLoginButton(),
+                            // Register Button
+                            _buildRegisterButton(),
 
                             const SizedBox(height: 20),
 
-                            // Forgot Password & Register
+                            // Login Link
                             _buildFooterLinks(),
 
                             const SizedBox(height: 32),
@@ -135,6 +164,21 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildHeader() {
     return Column(
       children: [
+        // Back Button
+        Row(
+          children: [
+            IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            const Spacer(),
+          ],
+        ),
+
         // Modern Logo
         Container(
           width: 72,
@@ -177,11 +221,11 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
 
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
 
         // Welcome Text
         const Text(
-          'Welcome Back',
+          'Create Account',
           style: TextStyle(
             color: Colors.white,
             fontSize: 32,
@@ -199,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 8),
 
         Text(
-          'Sign in to continue',
+          'Join MediCare today',
           style: TextStyle(
             color: Colors.white.withOpacity(0.9),
             fontSize: 18,
@@ -217,7 +261,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildRegisterForm() {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -234,6 +278,35 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: Column(
         children: [
+          // Name Fields Row
+          Row(
+            children: [
+              Expanded(
+                child: _buildModernTextField(
+                  controller: _firstNameController,
+                  focusNode: _firstNameFocusNode,
+                  isFocused: _firstNameFocused,
+                  hintText: 'First Name',
+                  icon: Icons.person_outline,
+                  keyboardType: TextInputType.name,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildModernTextField(
+                  controller: _lastNameController,
+                  focusNode: _lastNameFocusNode,
+                  isFocused: _lastNameFocused,
+                  hintText: 'Last Name',
+                  icon: Icons.person_outline,
+                  keyboardType: TextInputType.name,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
           // Email Field
           _buildModernTextField(
             controller: _emailController,
@@ -254,6 +327,30 @@ class _LoginPageState extends State<LoginPage> {
             hintText: 'Password',
             icon: Icons.lock_outline,
             isPassword: true,
+            isPasswordVisible: _isPasswordVisible,
+            onTogglePassword: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+              });
+            },
+          ),
+
+          const SizedBox(height: 16),
+
+          // Confirm Password Field
+          _buildModernTextField(
+            controller: _confirmPasswordController,
+            focusNode: _confirmPasswordFocusNode,
+            isFocused: _confirmPasswordFocused,
+            hintText: 'Confirm Password',
+            icon: Icons.lock_outline,
+            isPassword: true,
+            isPasswordVisible: _isConfirmPasswordVisible,
+            onTogglePassword: () {
+              setState(() {
+                _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+              });
+            },
           ),
         ],
       ),
@@ -267,6 +364,8 @@ class _LoginPageState extends State<LoginPage> {
     required String hintText,
     required IconData icon,
     bool isPassword = false,
+    bool isPasswordVisible = false,
+    VoidCallback? onTogglePassword,
     TextInputType keyboardType = TextInputType.text,
   }) {
     return AnimatedContainer(
@@ -284,7 +383,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextField(
         controller: controller,
         focusNode: focusNode,
-        obscureText: isPassword ? !_isPasswordVisible : false,
+        obscureText: isPassword ? !isPasswordVisible : false,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 17,
@@ -305,17 +404,13 @@ class _LoginPageState extends State<LoginPage> {
           suffixIcon: isPassword
               ? IconButton(
             icon: Icon(
-              _isPasswordVisible
+              isPasswordVisible
                   ? Icons.visibility_outlined
                   : Icons.visibility_off_outlined,
               color: Colors.white.withOpacity(0.7),
               size: 20,
             ),
-            onPressed: () {
-              setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
-              });
-            },
+            onPressed: onTogglePassword,
           )
               : null,
           border: InputBorder.none,
@@ -328,7 +423,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildRegisterButton() {
     return Container(
       width: double.infinity,
       height: 52,
@@ -350,7 +445,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _isLoading ? null : _handleLogin,
+          onTap: _isLoading ? null : _handleRegister,
           borderRadius: BorderRadius.circular(16),
           child: Container(
             alignment: Alignment.center,
@@ -364,7 +459,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             )
                 : const Text(
-              'Sign In',
+              'Create Account',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -380,48 +475,39 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildFooterLinks() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Text(
+          'Already have an account? ',
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.9),
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            shadows: const [
+              Shadow(
+                color: Colors.black38,
+                offset: Offset(0, 1),
+                blurRadius: 3,
+              ),
+            ],
+          ),
+        ),
         TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const RegisterPage()),
+              MaterialPageRoute(builder: (context) => const LoginPage()),
             );
           },
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           ),
           child: Text(
-            'Create Account',
+            'Sign In',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white,
               fontSize: 15,
-              fontWeight: FontWeight.w500,
-              shadows: const [
-                Shadow(
-                  color: Colors.black38,
-                  offset: Offset(0, 1),
-                  blurRadius: 3,
-                ),
-              ],
-            ),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            // Handle forgot password
-            _showSnackBar('Forgot password feature coming soon!');
-          },
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          ),
-          child: Text(
-            'Forgot Password?',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.9),
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               shadows: const [
                 Shadow(
                   color: Colors.black38,
@@ -550,9 +636,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _handleLogin() async {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+  void _handleRegister() async {
+    // Validation
+    if (_firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _confirmPasswordController.text.isEmpty) {
       _showSnackBar('Please fill in all fields');
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showSnackBar('Passwords do not match');
+      return;
+    }
+
+    if (_passwordController.text.length < 6) {
+      _showSnackBar('Password must be at least 6 characters');
       return;
     }
 
@@ -561,26 +662,23 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      final result = await ApiService.login(
-        _emailController.text.trim(),
-        _passwordController.text,
+      final result = await ApiService.register(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
       );
 
       if (result['success']) {
-        final userData = result['data']['data']['user'];
-        final user = User.fromJson(userData);
+        _showSnackBar('Account created successfully! Please sign in.', isError: false);
 
-        _showSnackBar('Login successful!', isError: false);
-
-        // Navigate to home page
+        // Navigate to login page
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(user: user),
-          ),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       } else {
-        _showSnackBar(result['message'] ?? 'Login failed');
+        _showSnackBar(result['message'] ?? 'Registration failed');
       }
     } catch (e) {
       _showSnackBar('An error occurred: $e');
@@ -646,10 +744,16 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _firstNameFocusNode.dispose();
+    _lastNameFocusNode.dispose();
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 }
