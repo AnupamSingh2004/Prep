@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/google_auth_service.dart';
-import '../models/user_model.dart';
-import 'home_page.dart';
+import '../widgets/auth_wrapper.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -701,16 +700,13 @@ class _RegisterPageState extends State<RegisterPage> {
         final apiResult = await ApiService.googleLogin(googleResult['accessToken']);
 
         if (apiResult['success']) {
-          final userData = apiResult['data']['data']['user'];
-          final user = User.fromJson(userData);
-
           _showSnackBar('Google sign-in successful!', isError: false);
 
-          // Navigate to home page
+          // Navigate using AuthWrapper to ensure proper state management
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(user: user),
+              builder: (context) => const AuthWrapper(),
             ),
           );
         } else {

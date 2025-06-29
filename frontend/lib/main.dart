@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'screens/login_page.dart';
+import 'widgets/auth_wrapper.dart';
 import 'config/google_auth_config.dart';
 
 void main() async {
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const LoginPage(),
+      home: const AuthWrapper(),
     );
   }
 }

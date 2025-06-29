@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/google_auth_service.dart';
-import '../models/user_model.dart';
-import 'home_page.dart';
+import '../widgets/auth_wrapper.dart';
 import 'register_page.dart';
 import 'google_signin_test_page.dart';
 
@@ -582,16 +581,13 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (result['success']) {
-        final userData = result['data']['data']['user'];
-        final user = User.fromJson(userData);
-
         _showSnackBar('Login successful!', isError: false);
 
-        // Navigate to home page
+        // Navigate using AuthWrapper to ensure proper state management
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(user: user),
+            builder: (context) => const AuthWrapper(),
           ),
         );
       } else {
@@ -618,16 +614,13 @@ class _LoginPageState extends State<LoginPage> {
         final apiResult = await ApiService.googleLogin(googleResult['accessToken']);
 
         if (apiResult['success']) {
-          final userData = apiResult['data']['data']['user'];
-          final user = User.fromJson(userData);
-
           _showSnackBar('Google sign-in successful!', isError: false);
 
-          // Navigate to home page
+          // Navigate using AuthWrapper to ensure proper state management
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(user: user),
+              builder: (context) => const AuthWrapper(),
             ),
           );
         } else {
