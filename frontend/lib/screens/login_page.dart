@@ -27,18 +27,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    _emailFocusNode.addListener(() {
-      setState(() {
-        _emailFocused = _emailFocusNode.hasFocus;
-      });
-    });
-
-    _passwordFocusNode.addListener(() {
-      setState(() {
-        _passwordFocused = _passwordFocusNode.hasFocus;
-      });
-    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -551,20 +541,44 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _handleLogin() async {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
       _showSnackBar('Please fill in all fields');
       return;
     }
 
+    // ✅ Check demo credentials
+    if (email == 'demo@user.com' && password == 'password123') {
+      final demoUser = User(
+        id: '001',
+        email: email,
+        firstName: 'Demo',
+        lastName: 'User',
+        emailVerified: true,
+        isGoogleUser: false,
+      );
+
+      _showSnackBar('Demo login successful!', isError: false);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(user: demoUser)
+          ,
+        ),
+      );
+      return;
+    }
+
+    // ❌ Fallback to actual API login if not demo
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final result = await ApiService.login(
-        _emailController.text.trim(),
-        _passwordController.text,
-      );
+      final result = await ApiService.login(email, password);
 
       if (result['success']) {
         final userData = result['data']['data']['user'];
@@ -572,11 +586,11 @@ class _LoginPageState extends State<LoginPage> {
 
         _showSnackBar('Login successful!', isError: false);
 
-        // Navigate to home page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => HomePage(user: user),
+
           ),
         );
       } else {
@@ -590,6 +604,7 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
   }
+
 
   void _handleGoogleSignIn() async {
     setState(() {
