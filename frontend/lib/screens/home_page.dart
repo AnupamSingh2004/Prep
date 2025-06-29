@@ -2,370 +2,236 @@ import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../services/api_service.dart';
 import 'login_page.dart';
+import 'package:first_app/screens/Home/Widgets/scheme_card.dart';
+import 'package:first_app/screens/Home/Widgets/recent_search.dart';
+import 'package:first_app/screens/Home/Widgets/savings_card.dart';
+import 'package:first_app/screens/Home/Widgets/stats_card.dart';
 
-class HomePage extends StatefulWidget {
+
+class HomePage extends StatelessWidget {
   final User user;
+  const HomePage({super.key, required this.user});
 
-  const HomePage({Key? key, required this.user}) : super(key: key);
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'MediCare',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.5,
-          ),
-        ),
-        backgroundColor: const Color(0xFF2E7D8A),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _handleLogout,
-          ),
+      backgroundColor: Colors.grey[100],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.teal,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: 'Scan'),
+          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Stores'),
+          BottomNavigationBarItem(icon: Icon(Icons.policy), label: 'Schemes'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF2E7D8A),
-              Color(0xFF1A5963),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Welcome Section
-                _buildWelcomeSection(),
-
-                const SizedBox(height: 40),
-
-                // User Info Card
-                _buildUserInfoCard(),
-
-                const SizedBox(height: 40),
-
-                // Quick Actions
-                _buildQuickActions(),
-
-                const Spacer(),
-
-                // Footer
-                _buildFooter(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWelcomeSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Welcome back,',
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          widget.user.fullName.isNotEmpty
-              ? widget.user.fullName
-              : widget.user.email.split('@').first,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 48, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                widget.user.emailVerified
-                    ? Icons.verified
-                    : Icons.info_outline,
-                color: Colors.white,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                widget.user.emailVerified
-                    ? 'Verified Account'
-                    : 'Account Pending Verification',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+              // ✅ Top Banner
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF22C1C3), Color(0xFF3CA1AF)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment:
+                  isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome, ${user.fullName}!',
+                      style: TextStyle(
+                        fontSize: isMobile ? 20 : 26,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Find affordable generic medicines and save up to 90% on healthcare costs',
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.left,
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text(
+                        '🔒 Trusted by 1M+ families',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
+              const SizedBox(height: 24),
+
+              // ✅ Search + Scan Section
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Enter medicine name (e.g., Crocin, Augr)',
+                          suffixIcon: IconButton(
+                              icon: const Icon(Icons.search), onPressed: () {}),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () {},
+                              icon: const Icon(Icons.document_scanner),
+                              label: const Text('Scan Prescription'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () {},
+                              icon: const Icon(Icons.upload_file),
+                              label: const Text('Upload Image'),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // ✅ Feature Cards
+              Row(
+                children: [
+                  Expanded(
+                    child: SchemeCard(
+                      title: 'Find Stores',
+                      subtitle: 'Nearby Jan Aushadhi',
+                      icon: Icons.store,
+                      color: Colors.green.shade100,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SchemeCard(
+                      title: 'Govt Schemes',
+                      subtitle: 'PMBJP & More',
+                      icon: Icons.account_balance,
+                      color: Colors.blue.shade100,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              // ✅ Recent Searches
+              const RecentSearches(),
+              // 1. Top Savings Section
+              const SizedBox(height: 24),
+              const Text("Today's Top Savings", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              const SavingsCard(
+                title: 'Paracetamol 500mg',
+                subtitle: 'Generic vs Branded',
+                savings: 'Save 89%',
+                color: Colors.green,
+              ),
+              const SavingsCard(
+                title: 'Omeprazole 20mg',
+                subtitle: 'Generic vs Branded',
+                savings: 'Save 85%',
+                color: Colors.blue,
+              ),
+
+// 2. Recent Searches (improved)
+              const SizedBox(height: 24),
+              const Text("Recent Searches", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: ListTile(
+                  leading: const Icon(Icons.search),
+                  title: const Text('Paracetamol 500mg'),
+                  subtitle: const Text('2 hours ago'),
+                ),
+              ),
+
+// 3. Feature Stats
+              const SizedBox(height: 24),
+              Row(
+                children: const [
+                  StatsCard(title: '9K+', subtitle: 'Stores'),
+                  SizedBox(width: 12),
+                  StatsCard(title: '90%', subtitle: 'Savings'),
+                  SizedBox(width: 12),
+                  StatsCard(title: '24/7', subtitle: 'Support'),
+                ],
+              ),
+
+// 4. AI Health Assistant Banner
+              const SizedBox(height: 24),
+              GestureDetector(
+                onTap: () {
+                  // TODO: Route to AI chatbot screen
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF7B42F6), Color(0xFFB01EFF)],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Center(
+                    child: Column(
+                      children: [
+                        Text('AI Health Assistant',
+                            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 4),
+                        Text('Get instant medical guidance',
+                            style: TextStyle(color: Colors.white70, fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildUserInfoCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Account Information',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildInfoRow(Icons.email_outlined, 'Email', widget.user.email),
-          const SizedBox(height: 12),
-          _buildInfoRow(
-            widget.user.isGoogleUser ? Icons.g_mobiledata : Icons.person_outline,
-            'Account Type',
-            widget.user.isGoogleUser ? 'Google Account' : 'Regular Account',
-          ),
-          if (widget.user.fullName.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            _buildInfoRow(Icons.badge_outlined, 'Full Name', widget.user.fullName),
-          ],
-        ],
       ),
     );
-  }
-
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: Colors.white.withOpacity(0.7),
-          size: 20,
-        ),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickActions() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Quick Actions',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionCard(
-                Icons.medical_services_outlined,
-                'Services',
-                'Coming Soon',
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildActionCard(
-                Icons.calendar_today_outlined,
-                'Appointments',
-                'Coming Soon',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionCard(
-                Icons.history_outlined,
-                'History',
-                'Coming Soon',
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildActionCard(
-                Icons.settings_outlined,
-                'Settings',
-                'Coming Soon',
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActionCard(IconData icon, String title, String subtitle) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: 32,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFooter() {
-    return Center(
-      child: Text(
-        'MediCare © 2024',
-        style: TextStyle(
-          color: Colors.white.withOpacity(0.6),
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    );
-  }
-
-  void _handleLogout() async {
-    // Show confirmation dialog
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
-
-    if (shouldLogout == true) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        await ApiService.logout();
-
-        if (mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-                (route) => false,
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Logout failed: $e'),
-              backgroundColor: Colors.red.withOpacity(0.8),
-            ),
-          );
-        }
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      }
-    }
   }
 }
