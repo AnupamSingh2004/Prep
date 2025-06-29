@@ -4,6 +4,7 @@ import '../services/google_auth_service.dart';
 import '../models/user_model.dart';
 import 'home_page.dart';
 import 'register_page.dart';
+import 'google_signin_test_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -128,6 +129,20 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
+      ),
+      // Debug FAB for Google Sign-In testing
+      floatingActionButton: FloatingActionButton(
+        mini: true,
+        backgroundColor: Colors.amber,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const GoogleSignInTestPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.bug_report, color: Colors.black),
       ),
     );
   }
@@ -580,7 +595,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       } else {
-        _showSnackBar(result['message'] ?? 'Login failed');
+        _showSnackBar(result['message'] ?? 'User not Recognized, Please Sign Up to Create a new Account');
       }
     } catch (e) {
       _showSnackBar('An error occurred: $e');
