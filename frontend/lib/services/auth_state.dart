@@ -11,7 +11,6 @@ class AuthState extends ChangeNotifier {
   User? get user => _user;
   bool get isLoading => _isLoading;
 
-  // Initialize authentication state
   Future<void> initializeAuth() async {
     _isLoading = true;
     notifyListeners();
@@ -27,7 +26,6 @@ class AuthState extends ChangeNotifier {
           _user = User.fromJson(userData);
           _isAuthenticated = true;
         } else {
-          // Try to refresh token
           final refreshSuccess = await ApiService.refreshToken();
           if (refreshSuccess) {
             final retryResult = await ApiService.getUserProfile();
@@ -53,8 +51,6 @@ class AuthState extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-
-  // Set authenticated user (called after successful login)
   Future<void> setAuthenticatedUser(User user) async {
     _user = user;
     _isAuthenticated = true;
@@ -62,13 +58,11 @@ class AuthState extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Logout
   Future<void> logout() async {
     await ApiService.clearTokens();
     await _clearAuthState();
   }
 
-  // Clear authentication state
   Future<void> _clearAuthState() async {
     _user = null;
     _isAuthenticated = false;

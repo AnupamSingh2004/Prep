@@ -2,7 +2,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../config/google_auth_config.dart';
 
 class GoogleAuthService {
-  // Use secure configuration with environment variables
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
     // Temporarily remove serverClientId to test basic Android OAuth
@@ -20,8 +19,7 @@ class GoogleAuthService {
       print('Package name: com.example.first_app');
       print('SHA-1: 03:BA:58:0D:5B:E6:F0:8B:95:59:AB:3C:CA:5D:1E:05:6E:2E:EA:49');
       print('=== END DEBUG ===');
-      
-      // First, sign out to ensure we get a fresh sign-in
+
       await _googleSignIn.signOut();
       
       print('Attempting to sign in...');
@@ -49,7 +47,7 @@ class GoogleAuthService {
       return {
         'success': true,
         'accessToken': googleAuth.accessToken,
-        'idToken': googleAuth.idToken, // Include ID token for server verification
+        'idToken': googleAuth.idToken,
         'user': {
           'email': googleUser.email,
           'displayName': googleUser.displayName ?? '',
@@ -59,8 +57,7 @@ class GoogleAuthService {
       };
     } catch (e) {
       print('Google Sign-In Error Details: $e');
-      
-      // Handle specific error cases
+
       if (e.toString().contains('sign_in_failed')) {
         if (e.toString().contains('10')) {
           return {

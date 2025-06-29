@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/google_auth_service.dart';
 
-// Add this to your main.dart as a test button or create a separate route
 class GoogleSignInDebugButton extends StatelessWidget {
   const GoogleSignInDebugButton({Key? key}) : super(key: key);
 
