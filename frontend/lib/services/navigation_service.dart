@@ -68,28 +68,28 @@ class NavigationConfig {
       activeIcon: Icons.home_rounded,
       label: 'Home',
       route: AppRoutes.home,
-      activeColor: Color(0xFF667eea),
+      activeColor: Color(0xFF10B981), // Medical green
     ),
     BottomNavItem(
       icon: Icons.search_outlined,
       activeIcon: Icons.search_rounded,
       label: 'Search',
       route: AppRoutes.search,
-      activeColor: Color(0xFF64b5f6),
+      activeColor: Color(0xFF059669), // Darker green
     ),
     BottomNavItem(
       icon: Icons.calendar_today_outlined,
       activeIcon: Icons.calendar_today_rounded,
       label: 'Schedule',
       route: AppRoutes.schedule,
-      activeColor: Color(0xFF4fc3f7),
+      activeColor: Color(0xFF047857), // Even darker green
     ),
     BottomNavItem(
       icon: Icons.person_outline_rounded,
       activeIcon: Icons.person_rounded,
       label: 'Profile',
       route: AppRoutes.profile,
-      activeColor: Color(0xFF4db6ac),
+      activeColor: Color(0xFF065F46), // Darkest green
     ),
   ];
   

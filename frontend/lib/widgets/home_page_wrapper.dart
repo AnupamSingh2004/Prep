@@ -25,36 +25,12 @@ class _HomePageWithoutBottomNav extends StatefulWidget {
   State<_HomePageWithoutBottomNav> createState() => _HomePageWithoutBottomNavState();
 }
 
-class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav> 
-    with TickerProviderStateMixin {
-  late AnimationController _fabAnimationController;
-  late Animation<double> _fabAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _fabAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _fabAnimation = CurvedAnimation(
-      parent: _fabAnimationController,
-      curve: Curves.easeInOut,
-    );
-    _fabAnimationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _fabAnimationController.dispose();
-    super.dispose();
-  }
+class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xFFF8FFFE), // Light medical background
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -63,9 +39,9 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFF2E7D8A),
+              Color(0xFFF0F9FF), // Very light blue
+              Color(0xFFF8FFFE), // Light mint
+              Color(0xFFECFDF5), // Light green
             ],
             stops: [0.0, 0.5, 1.0],
           ),
@@ -73,7 +49,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
         child: SafeArea(
           bottom: false, // Don't apply safe area to bottom
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 120.0), // Bottom padding for navbar
+            padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 20.0), // Removed bottom padding as layout handles it
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -99,24 +75,6 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
           ),
         ),
       ),
-      floatingActionButton: ScaleTransition(
-        scale: _fabAnimation,
-        child: FloatingActionButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Quick action coming soon!'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          },
-          backgroundColor: Colors.white,
-          foregroundColor: const Color(0xFF2E7D8A),
-          elevation: 8,
-          child: const Icon(Icons.add_rounded, size: 28),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -129,16 +87,16 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
           child: Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: const Color(0xFF10B981).withOpacity(0.1), // Light green medical
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                color: Colors.white.withOpacity(0.3),
+                color: const Color(0xFF10B981).withOpacity(0.3),
                 width: 2,
               ),
             ),
             child: CircleAvatar(
               radius: 22,
-              backgroundColor: Colors.white,
+              backgroundColor: const Color(0xFF10B981), // Medical green
               child: Text(
                 widget.user.firstName.isNotEmpty 
                     ? widget.user.firstName[0].toUpperCase()
@@ -146,7 +104,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF2E7D8A),
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -163,7 +121,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
         Text(
           'Welcome back,',
           style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
+            color: const Color(0xFF6B7280), // Dark gray
             fontSize: 20,
             fontWeight: FontWeight.w400,
             letterSpacing: 0.5,
@@ -175,7 +133,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
               ? widget.user.fullName
               : widget.user.email.split('@').first,
           style: const TextStyle(
-            color: Colors.white,
+            color: Color(0xFF111827), // Dark text
             fontSize: 32,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
@@ -185,10 +143,10 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: const Color(0xFF10B981).withOpacity(0.1), // Light green
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
-              color: Colors.white.withOpacity(0.3),
+              color: const Color(0xFF10B981).withOpacity(0.3),
               width: 1,
             ),
           ),
@@ -199,14 +157,14 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
                 widget.user.emailVerified
                     ? Icons.verified_rounded
                     : Icons.pending_rounded,
-                color: Colors.white,
+                color: const Color(0xFF10B981), // Medical green
                 size: 18,
               ),
               const SizedBox(width: 8),
               Text(
                 widget.user.emailVerified ? 'Verified Account' : 'Pending Verification',
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF059669), // Darker green
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.3,
@@ -223,12 +181,12 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF10B981).withOpacity(0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: const Color(0xFF10B981).withOpacity(0.1),
             blurRadius: 20,
             spreadRadius: 0,
             offset: const Offset(0, 8),
@@ -241,7 +199,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
           const Text(
             'Account Information',
             style: TextStyle(
-              color: Colors.white,
+              color: Color(0xFF111827), // Dark text
               fontSize: 20,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
@@ -270,12 +228,12 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: const Color(0xFF10B981).withOpacity(0.1), // Light medical green
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             icon,
-            color: Colors.white,
+            color: const Color(0xFF10B981), // Medical green
             size: 20,
           ),
         ),
@@ -286,8 +244,8 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
+                style: const TextStyle(
+                  color: Color(0xFF6B7280), // Gray text
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.3,
@@ -297,7 +255,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
               Text(
                 value,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF111827), // Dark text
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.3,
@@ -315,7 +273,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
       child: Text(
         'MediCare © 2024',
         style: TextStyle(
-          color: Colors.white.withOpacity(0.7),
+          color: const Color(0xFF6B7280), // Gray text
           fontSize: 14,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.5,
@@ -359,7 +317,7 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundColor: const Color(0xFF2E7D8A),
+                      backgroundColor: const Color(0xFF10B981), // Medical green
                       child: Text(
                         widget.user.firstName.isNotEmpty 
                             ? widget.user.firstName[0].toUpperCase()
@@ -470,12 +428,12 @@ class _HomePageWithoutBottomNavState extends State<_HomePageWithoutBottomNav>
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: (textColor ?? const Color(0xFF2E7D8A)).withOpacity(0.1),
+            color: (textColor ?? const Color(0xFF10B981)).withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             icon,
-            color: textColor ?? const Color(0xFF2E7D8A),
+            color: textColor ?? const Color(0xFF10B981),
             size: 22,
           ),
         ),

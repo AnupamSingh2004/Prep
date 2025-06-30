@@ -27,7 +27,7 @@ class MainLayout extends StatelessWidget {
       bottomNavigationBar: DynamicBottomNavBar(
         currentRoute: currentRoute,
       ),
-      extendBody: true, // This removes the white space
+      extendBody: false,
     );
   }
 }
@@ -44,60 +44,145 @@ class MainLayoutController extends StatefulWidget {
   State<MainLayoutController> createState() => _MainLayoutControllerState();
 }
 
-class _MainLayoutControllerState extends State<MainLayoutController> {
+class _MainLayoutControllerState extends State<MainLayoutController>
+    with TickerProviderStateMixin {
   int _currentIndex = 0;
-  late PageController _pageController;
+  bool _isLoading = false;
+  late AnimationController _loadingAnimationController;
+  late Animation<double> _loadingAnimation;
+
+  final List<Widget> _pages = [];
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _currentIndex);
+    _setupAnimations();
+    _initializePages();
+  }
+
+  void _setupAnimations() {
+    _loadingAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _loadingAnimation = CurvedAnimation(
+      parent: _loadingAnimationController,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _initializePages() {
+    _pages.addAll([
+      _buildHomePage(),
+      _buildSearchPage(),
+      _buildSchedulePage(),
+      _buildProfilePage(),
+    ]);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _loadingAnimationController.dispose();
     super.dispose();
   }
 
-  void _onNavigationTap(int index) {
+  void _onNavigationTap(int index) async {
+    if (index == _currentIndex || _isLoading) return;
+    
+    setState(() {
+      _isLoading = true;
+    });
+    
+    _loadingAnimationController.forward();
+    
+    // Simulate loading time
+    await Future.delayed(const Duration(milliseconds: 300));
+    
     setState(() {
       _currentIndex = index;
     });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOutCubic,
-    );
+    
+    await Future.delayed(const Duration(milliseconds: 200));
+    
+    _loadingAnimationController.reverse();
+    
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+      backgroundColor: Colors.white,
+      body: Stack(
         children: [
-          _buildHomePage(),
-          _buildSearchPage(),
-          _buildSchedulePage(),
-          _buildProfilePage(),
+          // Main content area - Column layout
+          Column(
+            children: [
+              // Main content area - takes remaining space
+              Expanded(
+                child: IndexedStack(
+                  index: _currentIndex,
+                  children: _pages,
+                ),
+              ),
+              
+              // Bottom Navigation Bar - fixed at bottom
+              ModernBottomNavBar(
+                currentIndex: _currentIndex,
+                onTap: _onNavigationTap,
+                items: NavigationConfig.mainNavItems,
+              ),
+            ],
+          ),
+          
+          // Loading overlay - positioned above everything when needed
+          if (_isLoading)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.3),
+                child: Center(
+                  child: AnimatedBuilder(
+                    animation: _loadingAnimation,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: 0.8 + (_loadingAnimation.value * 0.2),
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF10B981),
+                              ),
+                              strokeWidth: 3,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
-      bottomNavigationBar: ModernBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onNavigationTap,
-        items: NavigationConfig.mainNavItems,
-      ),
-      extendBody: true,
     );
   }
 
-  // Page builders for PageView
+  // Page builders
   Widget _buildHomePage() {
     if (widget.user != null) {
       return HomePageWrapper(user: widget.user!);

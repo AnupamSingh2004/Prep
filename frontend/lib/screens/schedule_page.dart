@@ -20,9 +20,9 @@ class _SchedulePageState extends State<SchedulePage> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF667eea),
-            Color(0xFF764ba2),
-            Color(0xFF2E7D8A),
+            Color(0xFFF0F9FF), // Very light blue
+            Color(0xFFF8FFFE), // Light mint
+            Color(0xFFECFDF5), // Light green
           ],
           stops: [0.0, 0.5, 1.0],
         ),
@@ -30,7 +30,7 @@ class _SchedulePageState extends State<SchedulePage> {
       child: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 120.0),
+          padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,7 +40,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   const Text(
                     'Schedule',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Color(0xFF111827), // Dark text
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.5,
@@ -49,16 +49,16 @@ class _SchedulePageState extends State<SchedulePage> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: const Color(0xFF10B981).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: const Color(0xFF10B981).withOpacity(0.3),
                         width: 1,
                       ),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.calendar_month_rounded,
-                      color: Colors.white,
+                      color: Color(0xFF10B981),
                       size: 24,
                     ),
                   ),
@@ -70,9 +70,17 @@ class _SchedulePageState extends State<SchedulePage> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                  border: Border.all(color: const Color(0xFF10B981).withOpacity(0.2)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF10B981).withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +88,7 @@ class _SchedulePageState extends State<SchedulePage> {
                     Text(
                       'Today, ${_getFormattedDate(selectedDate)}',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF111827), // Dark text
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.3,
@@ -107,13 +115,13 @@ class _SchedulePageState extends State<SchedulePage> {
                               margin: const EdgeInsets.only(right: 12),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? Colors.white.withOpacity(0.3)
-                                    : Colors.white.withOpacity(0.1),
+                                    ? const Color(0xFF10B981).withOpacity(0.2)
+                                    : const Color(0xFF10B981).withOpacity(0.05),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: isSelected
-                                      ? Colors.white.withOpacity(0.5)
-                                      : Colors.white.withOpacity(0.2),
+                                      ? const Color(0xFF10B981)
+                                      : const Color(0xFF10B981).withOpacity(0.2),
                                   width: isSelected ? 2 : 1,
                                 ),
                               ),
@@ -122,8 +130,8 @@ class _SchedulePageState extends State<SchedulePage> {
                                 children: [
                                   Text(
                                     _getDayName(date),
-                                    style: TextStyle(
-                                      color: Colors.white.withOpacity(0.8),
+                                    style: const TextStyle(
+                                      color: Color(0xFF6B7280), // Gray text
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -132,7 +140,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                   Text(
                                     date.day.toString(),
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: const Color(0xFF111827), // Dark text
                                       fontSize: 18,
                                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                                     ),
@@ -154,7 +162,7 @@ class _SchedulePageState extends State<SchedulePage> {
               const Text(
                 'Your Appointments',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF111827), // Dark text
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
@@ -167,9 +175,17 @@ class _SchedulePageState extends State<SchedulePage> {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.2)),
+                    border: Border.all(color: const Color(0xFF10B981).withOpacity(0.2)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF10B981).withOpacity(0.1),
+                        blurRadius: 10,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Center(
                     child: Column(
@@ -178,20 +194,20 @@ class _SchedulePageState extends State<SchedulePage> {
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: const Color(0xFF10B981).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.event_available_rounded,
-                            color: Colors.white,
+                            color: Color(0xFF10B981),
                             size: 48,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'No appointments scheduled',
-                          style: TextStyle(
-                            color: Colors.white,
+                          style: const TextStyle(
+                            color: Color(0xFF111827), // Dark text
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -200,8 +216,8 @@ class _SchedulePageState extends State<SchedulePage> {
                         Text(
                           'Your scheduled appointments will appear here',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                          style: const TextStyle(
+                            color: Color(0xFF6B7280), // Gray text
                             fontSize: 14,
                           ),
                         ),

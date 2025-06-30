@@ -17,9 +17,9 @@ class ProfilePage extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF667eea),
-            Color(0xFF764ba2),
-            Color(0xFF2E7D8A),
+            Color(0xFFF0F9FF), // Very light blue
+            Color(0xFFF8FFFE), // Light mint
+            Color(0xFFECFDF5), // Light green
           ],
           stops: [0.0, 0.5, 1.0],
         ),
@@ -27,14 +27,14 @@ class ProfilePage extends StatelessWidget {
       child: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 120.0),
+          padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 'Profile',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF111827), // Dark text
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
@@ -47,12 +47,12 @@ class ProfilePage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.2)),
+                    border: Border.all(color: const Color(0xFF10B981).withOpacity(0.2)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: const Color(0xFF10B981).withOpacity(0.1),
                         blurRadius: 20,
                         spreadRadius: 0,
                         offset: const Offset(0, 8),
@@ -63,7 +63,7 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: Colors.white,
+                        backgroundColor: const Color(0xFF10B981), // Medical green
                         child: Text(
                           user!.firstName.isNotEmpty 
                               ? user!.firstName[0].toUpperCase()
@@ -71,7 +71,7 @@ class ProfilePage extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 36,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF2E7D8A),
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -81,7 +81,7 @@ class ProfilePage extends StatelessWidget {
                             ? user!.fullName
                             : user!.email.split('@').first,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFF111827), // Dark text
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5,
@@ -90,8 +90,8 @@ class ProfilePage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         user!.email,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                        style: const TextStyle(
+                          color: Color(0xFF6B7280), // Gray text
                           fontSize: 16,
                           letterSpacing: 0.3,
                         ),
@@ -100,14 +100,10 @@ class ProfilePage extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: user!.emailVerified 
-                              ? Colors.green.withOpacity(0.2)
-                              : Colors.orange.withOpacity(0.2),
+                          color: const Color(0xFF10B981).withOpacity(0.1), // Light green
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: user!.emailVerified 
-                                ? Colors.green.withOpacity(0.3)
-                                : Colors.orange.withOpacity(0.3),
+                            color: const Color(0xFF10B981).withOpacity(0.3),
                             width: 1,
                           ),
                         ),
@@ -118,14 +114,14 @@ class ProfilePage extends StatelessWidget {
                               user!.emailVerified 
                                   ? Icons.verified_rounded 
                                   : Icons.pending_rounded,
-                              color: Colors.white,
+                              color: const Color(0xFF10B981), // Medical green
                               size: 16,
                             ),
                             const SizedBox(width: 6),
                             Text(
                               user!.emailVerified ? 'Verified' : 'Pending',
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Color(0xFF059669), // Darker green
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -190,30 +186,33 @@ class ProfilePage extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: const Color(0xFF10B981).withOpacity(0.1), // Light green
                           borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: const Color(0xFF10B981).withOpacity(0.2),
+                          ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.person_off_rounded,
-                          color: Colors.white,
+                          color: Color(0xFF10B981), // Medical green
                           size: 64,
                         ),
                       ),
                       const SizedBox(height: 24),
-                      Text(
+                      const Text(
                         'Profile not available',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFF111827), // Dark text
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
+                      const Text(
                         'Please login to view your profile',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Color(0xFF6B7280), // Gray text
                           fontSize: 16,
                         ),
                       ),
@@ -239,9 +238,23 @@ class ProfilePage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(
+          color: isDestructive 
+              ? Colors.red.withOpacity(0.3)
+              : const Color(0xFF10B981).withOpacity(0.2),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDestructive 
+                ? Colors.red.withOpacity(0.1)
+                : const Color(0xFF10B981).withOpacity(0.05),
+            blurRadius: 8,
+            spreadRadius: 0,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -249,13 +262,13 @@ class ProfilePage extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: isDestructive 
-                ? Colors.red.withOpacity(0.2)
-                : Colors.white.withOpacity(0.2),
+                ? Colors.red.withOpacity(0.1)
+                : const Color(0xFF10B981).withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             icon,
-            color: isDestructive ? Colors.red[300] : Colors.white,
+            color: isDestructive ? Colors.red[600] : const Color(0xFF10B981),
             size: 22,
           ),
         ),
@@ -263,7 +276,7 @@ class ProfilePage extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: isDestructive ? Colors.red[300] : Colors.white,
+            color: isDestructive ? Colors.red[600] : const Color(0xFF111827),
             fontSize: 16,
             letterSpacing: 0.3,
           ),
@@ -273,16 +286,16 @@ class ProfilePage extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             color: isDestructive 
-                ? Colors.red[200] 
-                : Colors.white.withOpacity(0.7),
+                ? Colors.red[400] 
+                : const Color(0xFF6B7280),
             letterSpacing: 0.3,
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           color: isDestructive 
-              ? Colors.red[300] 
-              : Colors.white.withOpacity(0.7),
+              ? Colors.red[400] 
+              : const Color(0xFF6B7280),
           size: 16,
         ),
         onTap: onTap,
@@ -297,7 +310,7 @@ class ProfilePage extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$feature feature coming soon!'),
-        backgroundColor: const Color(0xFF2E7D8A),
+        backgroundColor: const Color(0xFF10B981), // Medical green
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
