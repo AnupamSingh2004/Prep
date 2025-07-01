@@ -1,3 +1,4 @@
+import 'package:first_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/dynamic_bottom_nav.dart';
 import '../services/navigation_service.dart';
@@ -5,7 +6,6 @@ import '../models/user_model.dart';
 import '../widgets/home_page_wrapper.dart';
 import '../screens/search_page.dart';
 import '../screens/schedule_page.dart';
-import '../screens/profile_page.dart';
 import '../widgets/modern_bottom_nav.dart';
 
 class MainLayout extends StatelessWidget {
@@ -226,6 +226,6 @@ class _MainLayoutControllerState extends State<MainLayoutController>
   }
 
   Widget _buildProfilePage() {
-    return ProfilePage(user: widget.user);
+    return const ProfileScreen(); // Now loads user data dynamically
   }
 }
