@@ -47,6 +47,7 @@ def get_tokens_for_user(user):
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def register_user(request):
     """User registration endpoint"""
     try:
@@ -83,6 +84,7 @@ def register_user(request):
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def verify_otp(request):
     """OTP verification endpoint"""
     try:
@@ -139,6 +141,7 @@ def verify_otp(request):
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def login_user(request):
     """User login endpoint"""
     try:
@@ -197,6 +200,7 @@ def login_user(request):
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def google_login(request):
     """Google OAuth login endpoint"""
     try:
@@ -274,6 +278,7 @@ def google_login(request):
 
 
 @api_view(['POST'])
+@csrf_exempt
 @permission_classes([IsAuthenticated])
 def logout_user(request):
     """User logout endpoint"""
@@ -295,6 +300,7 @@ def logout_user(request):
 
 
 @api_view(['GET', 'PUT'])
+@csrf_exempt
 @permission_classes([IsAuthenticated])
 def user_profile(request):
     """Get or update user profile"""
@@ -332,6 +338,7 @@ def user_profile(request):
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def password_reset_request(request):
     """Request password reset OTP"""
     try:
@@ -363,6 +370,7 @@ def password_reset_request(request):
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def password_reset_confirm(request):
     """Confirm password reset with OTP"""
     try:
@@ -394,6 +402,7 @@ def password_reset_confirm(request):
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def resend_otp(request):
     """Resend OTP"""
     try:
@@ -424,6 +433,7 @@ def resend_otp(request):
 
 
 @api_view(['POST'])
+@csrf_exempt
 @permission_classes([IsAuthenticated])
 def change_password(request):
     """Change user password"""
@@ -458,6 +468,7 @@ def change_password(request):
 
 
 @api_view(['GET'])
+@csrf_exempt
 @permission_classes([IsAuthenticated])
 def user_sessions(request):
     """Get user active sessions"""
@@ -491,6 +502,7 @@ def user_sessions(request):
 
 
 @api_view(['POST'])
+@csrf_exempt
 @permission_classes([IsAuthenticated])
 def revoke_session(request):
     """Revoke a specific session"""
@@ -531,6 +543,8 @@ def revoke_session(request):
 
 
 @api_view(['GET'])
+@csrf_exempt
+@permission_classes([])  # Allow unauthenticated access
 def health_check(request):
     """Health check endpoint"""
     return Response({
