@@ -247,6 +247,132 @@ class ApiService {
     }
   }
 
+  // Upload prescriptions
+  static Future<Map<String, dynamic>> uploadPrescriptions({
+    required List<String> imagePaths,
+    String? title,
+    String? description,
+    String? doctorName,
+    String? hospitalName,
+    String? prescriptionDate,
+  }) async {
+    try {
+      final accessToken = await getAccessToken();
+      if (accessToken == null) {
+        throw Exception('No access token available');
+      }
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/prescriptions/upload/'),
+      );
+
+      request.headers['Authorization'] = 'Bearer $accessToken';
+
+      // Add images
+      for (int i = 0; i < imagePaths.length; i++) {
+        var file = await http.MultipartFile.fromPath(
+          'images',
+          imagePaths[i],
+        );
+        request.files.add(file);
+      }
+
+      // Add optional fields
+      if (title != null) request.fields['title'] = title;
+      if (description != null) request.fields['description'] = description;
+      if (doctorName != null) request.fields['doctor_name'] = doctorName;
+      if (hospitalName != null) request.fields['hospital_name'] = hospitalName;
+      if (prescriptionDate != null) request.fields['prescription_date'] = prescriptionDate;
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      // Handle token refresh if needed
+      if (response.statusCode == 401) {
+        bool refreshed = await refreshToken();
+        if (refreshed) {
+          final newAccessToken = await getAccessToken();
+          if (newAccessToken != null) {
+            request.headers['Authorization'] = 'Bearer $newAccessToken';
+            final retryStreamedResponse = await request.send();
+            final retryResponse = await http.Response.fromStream(retryStreamedResponse);
+            final data = jsonDecode(retryResponse.body);
+            
+            if (retryResponse.statusCode == 201) {
+              return {'success': true, 'data': data};
+            } else {
+              return {'success': false, 'message': data['error'] ?? 'Upload failed'};
+            }
+          }
+        }
+      }
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        return {'success': true, 'data': data};
+      } else {
+        return {'success': false, 'message': data['error'] ?? 'Upload failed'};
+      }
+    } catch (e) {
+      print('Upload prescriptions error: $e');
+      return {'success': false, 'message': 'Network error: Please check your connection'};
+    }
+  }
+
+  // Get user prescriptions
+  static Future<Map<String, dynamic>> getUserPrescriptions() async {
+    try {
+      final response = await _makeAuthenticatedRequest((token) async {
+        return await http.get(
+          Uri.parse('$baseUrl/prescriptions/prescriptions/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+      });
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {'success': true, 'data': data};
+      } else {
+        final data = jsonDecode(response.body);
+        return {'success': false, 'message': data['message'] ?? 'Failed to get prescriptions'};
+      }
+    } catch (e) {
+      print('Get prescriptions error: $e');
+      return {'success': false, 'message': 'Network error: Please check your connection'};
+    }
+  }
+
+  // Get prescription analytics
+  static Future<Map<String, dynamic>> getPrescriptionAnalytics() async {
+    try {
+      final response = await _makeAuthenticatedRequest((token) async {
+        return await http.get(
+          Uri.parse('$baseUrl/prescriptions/analytics/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+      });
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {'success': true, 'data': data};
+      } else {
+        final data = jsonDecode(response.body);
+        return {'success': false, 'message': data['message'] ?? 'Failed to get analytics'};
+      }
+    } catch (e) {
+      print('Get analytics error: $e');
+      return {'success': false, 'message': 'Network error: Please check your connection'};
+    }
+  }
+
   // Test connection
   static Future<bool> testConnection() async {
     try {

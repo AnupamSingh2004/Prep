@@ -307,9 +307,35 @@ def user_profile(request):
     try:
         if request.method == 'GET':
             serializer = UserProfileSerializer(request.user)
+            profile_data = serializer.data
+            
+            # Add prescription analytics
+            try:
+                from prescriptions.models import PrescriptionAnalytics
+                analytics, created = PrescriptionAnalytics.objects.get_or_create(
+                    user=request.user
+                )
+                if not created:
+                    analytics.update_analytics()
+                
+                profile_data.update({
+                    'total_savings': str(analytics.total_savings),
+                    'medicines_searched': analytics.total_medicines_searched,
+                    'stores_visited': analytics.stores_visited,
+                    'schemes_applied': analytics.schemes_applied,
+                })
+            except ImportError:
+                # Prescriptions app not available
+                profile_data.update({
+                    'total_savings': '0',
+                    'medicines_searched': 0,
+                    'stores_visited': 0,
+                    'schemes_applied': 0,
+                })
+            
             return Response({
                 'status': 'success',
-                'data': serializer.data
+                'data': profile_data
             }, status=status.HTTP_200_OK)
 
         elif request.method == 'PUT':

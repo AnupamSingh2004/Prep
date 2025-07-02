@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import 'upload_prescription_screen.dart';
+import 'my_prescriptions_screen.dart';
+import 'health_check_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -65,6 +69,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Logout failed')),
+        );
+      }
+    }
+  }
+
+  Future<void> _makeEmergencyCall() async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: '108');
+    try {
+      if (await canLaunchUrl(phoneUri)) {
+        await launchUrl(phoneUri);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Unable to make phone call'),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error making phone call'),
+          ),
         );
       }
     }
@@ -145,7 +174,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                IconButton(icon: const Icon(Icons.edit), onPressed: () {})
+                IconButton(
+                  icon: const Icon(Icons.edit), 
+                  onPressed: () {
+                    // TODO: Navigate to edit profile screen when available
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Edit profile feature coming soon')),
+                    );
+                  }
+                )
               ],
             ),
             const SizedBox(height: 24),
@@ -173,21 +210,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                quickAction(Icons.upload, "Upload\nPrescription"),
-                quickAction(Icons.favorite_border, "Health\nCheck"),
+                quickAction(
+                  Icons.upload, 
+                  "Upload\nPrescription",
+                  () async {
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const UploadPrescriptionScreen(),
+                      ),
+                    );
+                    if (result == true) {
+                      _loadUserProfile();
+                    }
+                  },
+                ),
+                quickAction(
+                  Icons.favorite_border, 
+                  "Health\nCheck",
+                  () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const HealthCheckScreen(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
 
             const SizedBox(height: 20),
 
             // Account Section
-            sectionTile(Icons.medical_services_outlined, "My Prescriptions"),
-            sectionTile(Icons.note_add_outlined, "Health Records"),
-            sectionTile(Icons.calendar_today_outlined, "Appointment History"),
-            sectionTile(Icons.notifications_outlined, "Notifications"),
-            sectionTile(Icons.lock_outline, "Privacy & Security"),
-            sectionTile(Icons.support_agent, "Help & Support"),
-            sectionTile(Icons.settings, "Settings"),
+            sectionTile(
+              Icons.medical_services_outlined, 
+              "My Prescriptions",
+              () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MyPrescriptionsScreen(),
+                  ),
+                );
+              },
+            ),
+            sectionTile(
+              Icons.note_add_outlined, 
+              "Health Records",
+              () {
+                // TODO: Navigate to Health Records screen when available
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Health Records feature coming soon')),
+                );
+              },
+            ),
+            sectionTile(
+              Icons.calendar_today_outlined, 
+              "Appointment History",
+              () {
+                // TODO: Navigate to Appointment History screen when available
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Appointment History feature coming soon')),
+                );
+              },
+            ),
+            sectionTile(
+              Icons.notifications_outlined, 
+              "Notifications",
+              () {
+                // TODO: Navigate to Notifications screen when available
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Notifications feature coming soon')),
+                );
+              },
+            ),
+            sectionTile(
+              Icons.lock_outline, 
+              "Privacy & Security",
+              () {
+                // TODO: Navigate to Privacy & Security screen when available
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Privacy & Security feature coming soon')),
+                );
+              },
+            ),
+            sectionTile(
+              Icons.support_agent, 
+              "Help & Support",
+              () {
+                // TODO: Navigate to Help & Support screen when available
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Help & Support feature coming soon')),
+                );
+              },
+            ),
+            sectionTile(
+              Icons.settings, 
+              "Settings",
+              () {
+                // TODO: Navigate to Settings screen when available
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Settings feature coming soon')),
+                );
+              },
+            ),
 
             const SizedBox(height: 20),
 
@@ -209,9 +333,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   const Expanded(child: Text("🚨 Emergency Helpline\n108 (National Ambulance)")),
                   ElevatedButton(
-                    onPressed: () {
-                      // Add call functionality using url_launcher
-                    },
+                    onPressed: _makeEmergencyCall,
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                     child: const Text("Call Now"),
                   )
@@ -249,22 +371,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget quickAction(IconData icon, String label) {
-    return Column(
-      children: [
-        CircleAvatar(radius: 24, backgroundColor: Colors.grey[200], child: Icon(icon)),
-        const SizedBox(height: 6),
-        Text(label, textAlign: TextAlign.center),
-      ],
+  Widget quickAction(IconData icon, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          CircleAvatar(radius: 24, backgroundColor: Colors.grey[200], child: Icon(icon)),
+          const SizedBox(height: 6),
+          Text(label, textAlign: TextAlign.center),
+        ],
+      ),
     );
   }
 
-  Widget sectionTile(IconData icon, String title) {
+  Widget sectionTile(IconData icon, String title, VoidCallback onTap) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }
