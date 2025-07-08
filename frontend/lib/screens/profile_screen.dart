@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import 'upload_prescription_screen.dart';
 import 'my_prescriptions_screen.dart';
 import 'health_check_screen.dart';
+import 'chatbot_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {

@@ -33,6 +33,7 @@ class AppRoutes {
   static const String search = '/search';
   static const String schedule = '/schedule';
   static const String profile = '/profile';
+  static const String chatbot = '/chatbot';
   static const String login = '/login';
   static const String register = '/register';
   static const String authWrapper = '/';
@@ -76,6 +77,13 @@ class NavigationConfig {
       label: 'Search',
       route: AppRoutes.search,
       activeColor: Color(0xFF059669), // Darker green
+    ),
+    BottomNavItem(
+      icon: Icons.smart_toy_outlined,
+      activeIcon: Icons.smart_toy_rounded,
+      label: 'Assistant',
+      route: AppRoutes.chatbot,
+      activeColor: Color(0xFF2E7D32), // Medical assistant green
     ),
     BottomNavItem(
       icon: Icons.calendar_today_outlined,

@@ -6,6 +6,7 @@ import '../models/user_model.dart';
 import '../widgets/home_page_wrapper.dart';
 import '../screens/search_page.dart';
 import '../screens/schedule_page.dart';
+import '../screens/chatbot_screen.dart';
 import '../widgets/modern_bottom_nav.dart';
 
 class MainLayout extends StatelessWidget {
@@ -75,6 +76,7 @@ class _MainLayoutControllerState extends State<MainLayoutController>
     _pages.addAll([
       _buildHomePage(),
       _buildSearchPage(),
+      _buildChatbotPage(),
       _buildSchedulePage(),
       _buildProfilePage(),
     ]);
@@ -219,6 +221,10 @@ class _MainLayoutControllerState extends State<MainLayoutController>
 
   Widget _buildSearchPage() {
     return const SearchPage();
+  }
+
+  Widget _buildChatbotPage() {
+    return const ChatbotScreen();
   }
 
   Widget _buildSchedulePage() {
