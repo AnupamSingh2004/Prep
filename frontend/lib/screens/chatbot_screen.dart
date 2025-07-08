@@ -238,9 +238,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> with TickerProviderStateM
               color: const Color(0xFFF8FAFE),
               child: ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.all(16).copyWith(
-                  bottom: 1, // Reduced bottom padding
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 itemCount: messages.length + (_isTyping ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == messages.length && _isTyping) {
@@ -256,7 +254,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> with TickerProviderStateM
           
           // Input Area - Fixed positioning with proper spacing
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -269,61 +267,58 @@ class _ChatbotScreenState extends State<ChatbotScreen> with TickerProviderStateM
             ),
             child: SafeArea(
               top: false,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF8FAFE),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: const Color(0xFF1976D2).withValues(alpha: 0.2),
-                          ),
-                        ),
-                        child: TextField(
-                          controller: _messageController,
-                          decoration: const InputDecoration(
-                            hintText: "Type your message...",
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 12,
-                            ),
-                            hintStyle: TextStyle(color: Colors.grey),
-                          ),
-                          maxLines: null,
-                          onSubmitted: (_) => _sendMessage(),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Container(
-                      width: 48,
-                      height: 48,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1976D2),
+                        color: const Color(0xFFF8FAFE),
                         borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF1976D2).withValues(alpha: 0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: IconButton(
-                        onPressed: _sendMessage,
-                        icon: const Icon(
-                          Icons.send_rounded,
-                          color: Colors.white,
-                          size: 20,
+                        border: Border.all(
+                          color: const Color(0xFF1976D2).withValues(alpha: 0.2),
                         ),
                       ),
+                      child: TextField(
+                        controller: _messageController,
+                        decoration: const InputDecoration(
+                          hintText: "Type your message...",
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
+                          hintStyle: TextStyle(color: Colors.grey),
+                        ),
+                        maxLines: null,
+                        onSubmitted: (_) => _sendMessage(),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 12),
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1976D2),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1976D2).withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      onPressed: _sendMessage,
+                      icon: const Icon(
+                        Icons.send_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -365,30 +360,35 @@ class _ChatbotScreenState extends State<ChatbotScreen> with TickerProviderStateM
             const SizedBox(width: 8),
           ],
           Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: message.isUser 
-                  ? const Color(0xFF1976D2)
-                  : Colors.white,
-                borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: message.isUser ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight: message.isUser ? const Radius.circular(4) : const Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.75,
               ),
-              child: Text(
-                message.text,
-                style: TextStyle(
-                  color: message.isUser ? Colors.white : Colors.black87,
-                  fontSize: 16,
-                  height: 1.4,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: message.isUser 
+                    ? const Color(0xFF1976D2)
+                    : Colors.white,
+                  borderRadius: BorderRadius.circular(20).copyWith(
+                    bottomLeft: message.isUser ? const Radius.circular(20) : const Radius.circular(4),
+                    bottomRight: message.isUser ? const Radius.circular(4) : const Radius.circular(20),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  message.text,
+                  style: TextStyle(
+                    color: message.isUser ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                    height: 1.4,
+                  ),
                 ),
               ),
             ),

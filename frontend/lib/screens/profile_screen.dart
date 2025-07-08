@@ -3,7 +3,6 @@ import '../services/api_service.dart';
 import 'upload_prescription_screen.dart';
 import 'my_prescriptions_screen.dart';
 import 'health_check_screen.dart';
-import 'chatbot_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -129,7 +128,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             )
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 16,
+          bottom: 120 + MediaQuery.of(context).viewInsets.bottom, // Space for navbar
+        ),
         child: Column(
           children: [
             // Profile Header
@@ -209,32 +213,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // Quick Actions
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                quickAction(
-                  Icons.upload, 
-                  "Upload\nPrescription",
-                  () async {
-                    final result = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const UploadPrescriptionScreen(),
-                      ),
-                    );
-                    if (result == true) {
-                      _loadUserProfile();
-                    }
-                  },
+                Expanded(
+                  child: quickAction(
+                    Icons.upload, 
+                    "Upload\nPrescription",
+                    () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const UploadPrescriptionScreen(),
+                        ),
+                      );
+                      if (result == true) {
+                        _loadUserProfile();
+                      }
+                    },
+                  ),
                 ),
-                quickAction(
-                  Icons.favorite_border, 
-                  "Health\nCheck",
-                  () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const HealthCheckScreen(),
-                      ),
-                    );
-                  },
+                Expanded(
+                  child: quickAction(
+                    Icons.favorite_border, 
+                    "Health\nCheck",
+                    () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const HealthCheckScreen(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -347,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: _handleSignOut,
               icon: const Icon(Icons.logout),
               label: const Text("Sign Out"),
-            )
+            ),
           ],
         ),
       ),
@@ -364,9 +371,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Flexible(
+            child: Text(
+              value, 
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(label, textAlign: TextAlign.center),
+          Flexible(
+            child: Text(
+              label, 
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+          ),
         ],
       ),
     );
@@ -375,12 +397,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget quickAction(IconData icon, String label, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          CircleAvatar(radius: 24, backgroundColor: Colors.grey[200], child: Icon(icon)),
-          const SizedBox(height: 6),
-          Text(label, textAlign: TextAlign.center),
-        ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 24, 
+              backgroundColor: Colors.grey[200], 
+              child: Icon(icon),
+            ),
+            const SizedBox(height: 6),
+            Flexible(
+              child: Text(
+                label, 
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

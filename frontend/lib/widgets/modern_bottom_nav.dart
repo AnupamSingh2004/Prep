@@ -69,7 +69,7 @@ class _ModernBottomNavBarState extends State<ModernBottomNavBar>
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final bottomPadding = MediaQuery.of(context).viewPadding.bottom; // Use viewPadding instead
     
     return Container(
       height: 90 + bottomPadding,

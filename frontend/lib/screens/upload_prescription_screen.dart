@@ -416,7 +416,12 @@ class _UploadPrescriptionScreenState extends State<UploadPrescriptionScreen> wit
             child: FadeTransition(
               opacity: _fadeAnimation,
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.only(
+                  left: 24,
+                  right: 24,
+                  top: 24,
+                  bottom: 120 + MediaQuery.of(context).viewInsets.bottom, // Space for navbar
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -723,7 +728,6 @@ class _UploadPrescriptionScreenState extends State<UploadPrescriptionScreen> wit
                               ),
                       ),
                     ),
-                    const SizedBox(height: 32),
                   ],
                 ),
               ),

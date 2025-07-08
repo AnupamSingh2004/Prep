@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../widgets/dynamic_bottom_nav.dart';
 import '../services/navigation_service.dart';
 import '../models/user_model.dart';
-import '../widgets/home_page_wrapper.dart';
-import '../screens/search_page.dart';
-import '../screens/schedule_page.dart';
+import '../screens/home_page.dart';
+import '../screens/upload_prescription_screen.dart';
+import '../screens/stores_screen.dart';
+import '../screens/schemes_screen.dart';
 import '../screens/chatbot_screen.dart';
 import '../widgets/modern_bottom_nav.dart';
 
@@ -75,9 +76,10 @@ class _MainLayoutControllerState extends State<MainLayoutController>
   void _initializePages() {
     _pages.addAll([
       _buildHomePage(),
-      _buildSearchPage(),
+      _buildScanPage(),
+      _buildStoresPage(),
+      _buildSchemesPage(),
       _buildChatbotPage(),
-      _buildSchedulePage(),
       _buildProfilePage(),
     ]);
   }
@@ -117,29 +119,16 @@ class _MainLayoutControllerState extends State<MainLayoutController>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true, // Allow content to resize for keyboard
+      extendBody: true, // Extend body behind the bottom nav
       body: Stack(
         children: [
-          // Main content area - Column layout
-          Column(
-            children: [
-              // Main content area - takes remaining space
-              Expanded(
-                child: IndexedStack(
-                  index: _currentIndex,
-                  children: _pages,
-                ),
-              ),
-              
-              // Bottom Navigation Bar - fixed at bottom
-              ModernBottomNavBar(
-                currentIndex: _currentIndex,
-                onTap: _onNavigationTap,
-                items: NavigationConfig.mainNavItems,
-              ),
-            ],
+          IndexedStack(
+            index: _currentIndex,
+            children: _pages,
           ),
           
-          // Loading overlay - positioned above everything when needed
+          // Loading overlay when needed
           if (_isLoading)
             Positioned.fill(
               child: Container(
@@ -181,13 +170,18 @@ class _MainLayoutControllerState extends State<MainLayoutController>
             ),
         ],
       ),
+      bottomNavigationBar: ModernBottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: _onNavigationTap,
+        items: NavigationConfig.mainNavItems,
+      ),
     );
   }
 
   // Page builders
   Widget _buildHomePage() {
     if (widget.user != null) {
-      return HomePageWrapper(user: widget.user!);
+      return HomePage(user: widget.user!);
     }
     
     return Container(
@@ -219,16 +213,20 @@ class _MainLayoutControllerState extends State<MainLayoutController>
     );
   }
 
-  Widget _buildSearchPage() {
-    return const SearchPage();
+  Widget _buildScanPage() {
+    return const UploadPrescriptionScreen();
+  }
+
+  Widget _buildStoresPage() {
+    return const StoresScreen();
+  }
+
+  Widget _buildSchemesPage() {
+    return const SchemesScreen();
   }
 
   Widget _buildChatbotPage() {
     return const ChatbotScreen();
-  }
-
-  Widget _buildSchedulePage() {
-    return const SchedulePage();
   }
 
   Widget _buildProfilePage() {

@@ -30,15 +30,18 @@ class NavigationService {
 
 class AppRoutes {
   static const String home = '/home';
-  static const String search = '/search';
-  static const String schedule = '/schedule';
-  static const String profile = '/profile';
+  static const String scan = '/scan';
+  static const String stores = '/stores';
+  static const String schemes = '/schemes';
   static const String chatbot = '/chatbot';
+  static const String profile = '/profile';
   static const String login = '/login';
   static const String register = '/register';
   static const String authWrapper = '/';
   
-  // Add more routes as needed
+  // Additional routes (removed from main nav)
+  static const String search = '/search';
+  static const String schedule = '/schedule';
   static const String settings = '/settings';
   static const String notifications = '/notifications';
   static const String appointments = '/appointments';
@@ -69,35 +72,42 @@ class NavigationConfig {
       activeIcon: Icons.home_rounded,
       label: 'Home',
       route: AppRoutes.home,
+      activeColor: Color(0xFF2563EB), // Medical blue
+    ),
+    BottomNavItem(
+      icon: Icons.camera_alt_outlined,
+      activeIcon: Icons.camera_alt_rounded,
+      label: 'Scan',
+      route: AppRoutes.scan,
       activeColor: Color(0xFF10B981), // Medical green
     ),
     BottomNavItem(
-      icon: Icons.search_outlined,
-      activeIcon: Icons.search_rounded,
-      label: 'Search',
-      route: AppRoutes.search,
-      activeColor: Color(0xFF059669), // Darker green
+      icon: Icons.store_outlined,
+      activeIcon: Icons.store_rounded,
+      label: 'Stores',
+      route: AppRoutes.stores,
+      activeColor: Color(0xFF8B5CF6), // Purple
+    ),
+    BottomNavItem(
+      icon: Icons.health_and_safety_outlined,
+      activeIcon: Icons.health_and_safety_rounded,
+      label: 'Schemes',
+      route: AppRoutes.schemes,
+      activeColor: Color(0xFFF59E0B), // Orange
     ),
     BottomNavItem(
       icon: Icons.smart_toy_outlined,
       activeIcon: Icons.smart_toy_rounded,
-      label: 'Assistant',
+      label: 'Chatbot',
       route: AppRoutes.chatbot,
-      activeColor: Color(0xFF2E7D32), // Medical assistant green
-    ),
-    BottomNavItem(
-      icon: Icons.calendar_today_outlined,
-      activeIcon: Icons.calendar_today_rounded,
-      label: 'Schedule',
-      route: AppRoutes.schedule,
-      activeColor: Color(0xFF047857), // Even darker green
+      activeColor: Color(0xFF06B6D4), // Cyan
     ),
     BottomNavItem(
       icon: Icons.person_outline_rounded,
       activeIcon: Icons.person_rounded,
       label: 'Profile',
       route: AppRoutes.profile,
-      activeColor: Color(0xFF065F46), // Darkest green
+      activeColor: Color(0xFF6366F1), // Indigo
     ),
   ];
   
